@@ -27,6 +27,10 @@ public class FirebaseAccountSign : MonoBehaviour
     public GameObject signInModal;
     public GameObject createTaskModal;
 
+
+    //Testing to be changed in the future
+    [Header("Testing")]
+    public TestPlannerTask testPlannerTask;
     private void Awake()
     {
         InitializeFirebase();
@@ -63,7 +67,7 @@ public class FirebaseAccountSign : MonoBehaviour
 
                         createTaskModal.SetActive(true);
 
-                        SetSessionId();
+                        SetSessionId(userName);
                     }
                 });
             }
@@ -146,7 +150,9 @@ public class FirebaseAccountSign : MonoBehaviour
 
                     createTaskModal.SetActive(true);
 
-                    SetSessionId();
+                    SetSessionId(userNameField.text);
+
+                    testPlannerTask.CreateUserDocument();
                 }
             });
         }
@@ -181,7 +187,7 @@ public class FirebaseAccountSign : MonoBehaviour
 
                 createTaskModal.SetActive(true);
 
-                SetSessionId();
+                SetSessionId(existNameField.text);
                 return;
             }
         });
@@ -192,16 +198,16 @@ public class FirebaseAccountSign : MonoBehaviour
         auth.SignOut();
 
         if (FirebaseDataHandler.Instance == null) return;
-        FirebaseDataHandler.Instance.SetSessionId(string.Empty);
+        FirebaseDataHandler.Instance.SetSessionId(string.Empty, string.Empty);
 
         if (PlannerController.Instance == null) return;
         PlannerController.Instance.ShowLoginScreen();
     }
 
-    private void SetSessionId()
+    private void SetSessionId(string userName)
     {
         if (FirebaseDataHandler.Instance == null) return;
-        FirebaseDataHandler.Instance.SetSessionId(user.UserId);
+        FirebaseDataHandler.Instance.SetSessionId(user.UserId, userName);
 
         if (PlannerController.Instance == null) return;
         PlannerController.Instance.PlannerHomeScreen();
