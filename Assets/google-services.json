@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "517516252167",
+    "project_id": "planner-c7a59",
+    "storage_bucket": "planner-c7a59.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:517516252167:android:2957395e1899cdaf05c6a2",
+        "android_client_info": {
+          "package_name": "com.krazykrakengames.planner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "517516252167-124up5f17moamthbqkru715h92bo78ji.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUFps01tapogp_O6ZMZFgwBw7-OOUcUjw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "517516252167-124up5f17moamthbqkru715h92bo78ji.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

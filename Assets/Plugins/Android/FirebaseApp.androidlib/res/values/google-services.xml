@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:keep="@string/gcm_defaultSenderId,@string/google_storage_bucket,@string/project_id,@string/google_api_key,@string/google_crash_reporting_api_key,@string/google_app_id,@string/default_web_client_id">
+  <string name="gcm_defaultSenderId" translatable="false">517516252167</string>
+  <string name="google_storage_bucket" translatable="false">planner-c7a59.appspot.com</string>
+  <string name="project_id" translatable="false">planner-c7a59</string>
+  <string name="google_api_key" translatable="false">AIzaSyCUFps01tapogp_O6ZMZFgwBw7-OOUcUjw</string>
+  <string name="google_crash_reporting_api_key" translatable="false">AIzaSyCUFps01tapogp_O6ZMZFgwBw7-OOUcUjw</string>
+  <string name="google_app_id" translatable="false">1:517516252167:android:2957395e1899cdaf05c6a2</string>
+  <string name="default_web_client_id" translatable="false">517516252167-124up5f17moamthbqkru715h92bo78ji.apps.googleusercontent.com</string>
+</resources>
