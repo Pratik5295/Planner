@@ -15,6 +15,10 @@ public class PlannerController : MonoBehaviour
 
     public static PlannerController Instance = null;
 
+    private int PARAM_STATE = Animator.StringToHash("State");
+    [SerializeField] private Animator animator;
+
+
     public enum State
     {
         LOGIN = 0,
@@ -40,6 +44,9 @@ public class PlannerController : MonoBehaviour
     public void SetState(State state)
     {
         currentState = state;
+
+        if (animator != null && animator.gameObject.activeInHierarchy)
+            animator.SetInteger(PARAM_STATE, (int)state);
     }
 
     public void PlannerHomeScreen()

@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class FirebaseDataHandler : MonoBehaviour
 {
+    //This script is responsible for handling data of the player for
+    // the current session
     public static FirebaseDataHandler Instance = null;
 
     [Header("Player Session Info")]

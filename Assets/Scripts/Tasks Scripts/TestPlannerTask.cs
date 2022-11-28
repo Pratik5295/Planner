@@ -12,19 +12,27 @@ public class TestPlannerTask : MonoBehaviour
     public TMP_InputField taskDesInput;
 
     FirebaseFirestore db;
+    string mainCollection;
+
+
+    //Controllers
+    FirebaseController fc;
+    FirebaseDataHandler fd;
     private void Start()
     {
-        db = FirebaseFirestore.DefaultInstance;
+        fc = FirebaseController.Instance;
+        fd = FirebaseDataHandler.Instance;
+
+        db = fc.db;
+        mainCollection = fc.MAIN_COLLECTION;
 
         DateTime timerNow = DateTime.Now;
         string id = timerNow.ToString();
-
-        Debug.Log($"Now Time: {id}");
     }
 
     public void CreateUserDocument()
     {
-        DocumentReference docRef = db.Collection("Users")
+        DocumentReference docRef = db.Collection(mainCollection)
             .Document(FirebaseDataHandler.Instance.GetSessionId());
 
         Dictionary<string, object> update = new Dictionary<string, object>
@@ -40,13 +48,14 @@ public class TestPlannerTask : MonoBehaviour
     public void SendDataButton()
     {
         DateTime timerNow = DateTime.Now;
-        string id = timerNow.ToString();
+        string shortDate = timerNow.ToShortDateString();
+        string shortTime = timerNow.ToShortTimeString();
 
-        id = TimeConverter(id);
-        DocumentReference docRef = db.Collection("Users")
+        shortDate = DateConverter(shortDate);
+        DocumentReference docRef = db.Collection(mainCollection)
             .Document(FirebaseDataHandler.Instance.GetSessionId())
-            .Collection("Tasks")
-            .Document(id);
+            .Collection(shortDate)
+            .Document(shortTime);
 
         FirebaseTaskData userTask = new FirebaseTaskData
         {
@@ -62,8 +71,9 @@ public class TestPlannerTask : MonoBehaviour
         });
     }
 
-    private string TimeConverter(string timer)
+    private string DateConverter(string timer)
     {
+        //Converts date to include dashes
         return timer.Replace('/', '-');
     }
 

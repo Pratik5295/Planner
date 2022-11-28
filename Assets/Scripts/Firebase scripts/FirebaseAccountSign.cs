@@ -22,11 +22,6 @@ public class FirebaseAccountSign : MonoBehaviour
 
     public TMP_InputField existNameField;
 
-    [Header("Modals")]
-    public GameObject signUpModal;
-    public GameObject signInModal;
-    public GameObject createTaskModal;
-
 
     //Testing to be changed in the future
     [Header("Testing")]
@@ -39,9 +34,7 @@ public class FirebaseAccountSign : MonoBehaviour
 
     private void Start()
     {
-        signUpModal.SetActive(true);
-        signInModal.SetActive(true);
-        createTaskModal.SetActive(false);
+        PlannerController.Instance.ShowLoginScreen();
     }
 
     void AutoLoginWithLocalUser()
@@ -61,11 +54,6 @@ public class FirebaseAccountSign : MonoBehaviour
                     if (createTask.IsCompleted)
                     {
                         user = task.Result;
-
-                        signUpModal.SetActive(false);
-                        signInModal.SetActive(false);
-
-                        createTaskModal.SetActive(true);
 
                         SetSessionId(userName);
                     }
@@ -145,11 +133,6 @@ public class FirebaseAccountSign : MonoBehaviour
                 {
                     user = task.Result;
 
-                    signUpModal.SetActive(false);
-                    signInModal.SetActive(false);
-
-                    createTaskModal.SetActive(true);
-
                     SetSessionId(userNameField.text);
 
                     testPlannerTask.CreateUserDocument();
@@ -182,10 +165,6 @@ public class FirebaseAccountSign : MonoBehaviour
             if (task.IsCompleted)
             {
                 user = task.Result;
-                signUpModal.SetActive(false);
-                signInModal.SetActive(false);
-
-                createTaskModal.SetActive(true);
 
                 SetSessionId(existNameField.text);
                 return;
