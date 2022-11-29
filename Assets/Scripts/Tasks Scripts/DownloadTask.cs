@@ -13,6 +13,10 @@ public class DownloadTask : MonoBehaviour
     //Controllers
     FirebaseController fc;
     FirebaseDataHandler fd;
+
+    //For garbage management! Object pooling to be used later
+    [SerializeField] public GameObject contentParent;
+
     private void Start()
     {
         fc = FirebaseController.Instance;
@@ -25,6 +29,16 @@ public class DownloadTask : MonoBehaviour
         string id = timerNow.ToString();
     }
 
+    private void OnEnable()
+    {
+        GetAllTasks();
+    }
+
+    private void OnDisable()
+    {
+        ClearTaskObjects();
+    }
+
     public void GetAllTasks()
     {
         if(db == null)
@@ -33,6 +47,8 @@ public class DownloadTask : MonoBehaviour
             fd = FirebaseDataHandler.Instance;
 
             db = fc.db;
+
+            if (db == null) return;
         }
         string id = FirebaseDataHandler.Instance.GetSessionId();
 
@@ -59,6 +75,16 @@ public class DownloadTask : MonoBehaviour
         });
     }
 
+    private void ClearTaskObjects()
+    {
+        if (contentParent == null) return;
+        if (contentParent.transform.childCount == 0) return;
+
+        foreach(Transform child in contentParent.transform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
 
     public void GetCurrentTime()
     {

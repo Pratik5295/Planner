@@ -32,6 +32,16 @@ public class TestPlannerTask : MonoBehaviour
 
     public void CreateUserDocument()
     {
+        if (db == null)
+        {
+            fc = FirebaseController.Instance;
+            fd = FirebaseDataHandler.Instance;
+
+            db = fc.db;
+
+            if (db == null) return;
+        }
+
         DocumentReference docRef = db.Collection(mainCollection)
             .Document(FirebaseDataHandler.Instance.GetSessionId());
 
@@ -47,6 +57,17 @@ public class TestPlannerTask : MonoBehaviour
     //Added to UI button
     public void SendDataButton()
     {
+
+        if (db == null)
+        {
+            fc = FirebaseController.Instance;
+            fd = FirebaseDataHandler.Instance;
+
+            db = fc.db;
+
+            if (db == null) return;
+        }
+
         DateTime timerNow = DateTime.Now;
         string shortDate = timerNow.ToShortDateString();
         string shortTime = timerNow.ToShortTimeString();
