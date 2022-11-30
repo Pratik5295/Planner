@@ -10,10 +10,11 @@ public class TestPlannerTask : MonoBehaviour
 {
     public TMP_InputField taskNameInput;
     public TMP_InputField taskDesInput;
+    public TMP_Dropdown taskTimerDropdown;
 
     FirebaseFirestore db;
     string mainCollection;
-
+    DateTime timerNow;
 
     //Controllers
     FirebaseController fc;
@@ -26,8 +27,7 @@ public class TestPlannerTask : MonoBehaviour
         db = fc.db;
         mainCollection = fc.MAIN_COLLECTION;
 
-        DateTime timerNow = DateTime.Now;
-        string id = timerNow.ToString();
+    
     }
 
     public void CreateUserDocument()
@@ -68,7 +68,8 @@ public class TestPlannerTask : MonoBehaviour
             if (db == null) return;
         }
 
-        DateTime timerNow = DateTime.Now;
+        timerNow = PlannerController.Instance.currentDate;
+        Debug.Log("Created for date: " + timerNow.ToShortDateString());
         string shortDate = timerNow.ToShortDateString();
         string shortTime = timerNow.ToShortTimeString();
 
@@ -76,7 +77,9 @@ public class TestPlannerTask : MonoBehaviour
         DocumentReference docRef = db.Collection(mainCollection)
             .Document(FirebaseDataHandler.Instance.GetSessionId())
             .Collection(shortDate)
-            .Document(shortTime);
+            .Document(taskTimerDropdown.options[taskTimerDropdown.value].text);
+
+        
 
         FirebaseTaskData userTask = new FirebaseTaskData
         {
@@ -89,6 +92,10 @@ public class TestPlannerTask : MonoBehaviour
         docRef.SetAsync(userTask, SetOptions.MergeAll).ContinueWithOnMainThread(task =>
         {
             Debug.Log("User task sent successfully");
+            taskNameInput.text = String.Empty;
+            taskDesInput.text = String.Empty;
+            taskTimerDropdown.value = 0;
+            PlannerController.Instance.PlannerHomeScreen();
         });
     }
 

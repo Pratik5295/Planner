@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlannerController : MonoBehaviour
 {
@@ -18,7 +21,7 @@ public class PlannerController : MonoBehaviour
     private int PARAM_STATE = Animator.StringToHash("State");
     [SerializeField] private Animator animator;
 
-
+    public DateTime currentDate;    //This will point to the current date shown on calendar
     public enum State
     {
         LOGIN = 0,
@@ -27,6 +30,12 @@ public class PlannerController : MonoBehaviour
     }
 
     public State currentState;
+
+    [SerializeField] private List<GameObject> eventsList;
+
+    public TextMeshProUGUI headerDateText;
+
+    public Action OnDateChanged;
 
     private void Awake()
     {
@@ -38,6 +47,9 @@ public class PlannerController : MonoBehaviour
         {
             Destroy(this);
         }
+
+        currentDate = DateTime.Now;
+        UpdateDateHeader();
     }
 
     #region State Changes
@@ -62,6 +74,55 @@ public class PlannerController : MonoBehaviour
     public void ShowLoginScreen()
     {
         SetState(State.LOGIN);
+    }
+    #endregion
+
+
+    #region Handle Calendar Events
+
+    public void AddEventToList(GameObject calEvent)
+    {
+        if (!eventsList.Contains(calEvent))
+        {
+            eventsList.Add(calEvent);
+        }
+    }
+
+    public void RemoveAllFromList()
+    {
+        if (eventsList.Count == 0) return;
+        if(eventsList.Count > 0)
+        {
+            foreach(GameObject calEvent in eventsList)
+            {
+                Destroy(calEvent);
+            }
+        }
+    }
+    #endregion
+
+    #region Handle Date Change
+
+    public void SetToNextDate()
+    {
+        currentDate = currentDate.AddDays(1);
+        Debug.Log("Now current Date is: " + currentDate.ToShortDateString());
+        RemoveAllFromList();
+        UpdateDateHeader();
+    }
+
+    public void SetToPreviousDate()
+    {
+        currentDate = currentDate.AddDays(-1);
+        Debug.Log("Now current Date is: " + currentDate.ToShortDateString());
+        RemoveAllFromList();
+        UpdateDateHeader();
+    }
+
+    public void UpdateDateHeader()
+    {
+        headerDateText.text = $"{currentDate.ToString("dd")} {currentDate.ToString("MMMM")} {currentDate.ToString("yyyy")}";
+        OnDateChanged?.Invoke();
     }
     #endregion
 }

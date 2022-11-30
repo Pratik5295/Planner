@@ -17,6 +17,8 @@ public class DownloadTask : MonoBehaviour
     //For garbage management! Object pooling to be used later
     [SerializeField] public GameObject contentParent;
 
+    public GameObject eventPrefab;
+
     private void Start()
     {
         fc = FirebaseController.Instance;
@@ -31,12 +33,18 @@ public class DownloadTask : MonoBehaviour
 
     private void OnEnable()
     {
-        GetAllTasks();
+        PlannerController.Instance.OnDateChanged += OnDateChangedHandler;
     }
 
     private void OnDisable()
     {
+        PlannerController.Instance.OnDateChanged -= OnDateChangedHandler;
+    }
+
+    private void OnDateChangedHandler()
+    {
         ClearTaskObjects();
+        GetAllTasks();
     }
 
     public void GetAllTasks()
@@ -52,7 +60,7 @@ public class DownloadTask : MonoBehaviour
         }
         string id = FirebaseDataHandler.Instance.GetSessionId();
 
-        DateTime timerNow = DateTime.Now;
+        DateTime timerNow = PlannerController.Instance.currentDate;
         string shortDate = timerNow.ToShortDateString();
         shortDate = DateConverter(shortDate);
 
@@ -63,12 +71,23 @@ public class DownloadTask : MonoBehaviour
             foreach (DocumentSnapshot documentSnapshot in snap.Documents)
             {
                 Debug.Log(String.Format("Document data for {0} document:", documentSnapshot.Id));
+                GameObject slot = GetTimeSlotObject(shortDate, documentSnapshot.Id);
+
                 Dictionary<string, object> t = documentSnapshot.ToDictionary();
+
+                //Task information
+
+                string taskTitle = string.Empty;
                 foreach (KeyValuePair<string, object> pair in t)
                 {
                     Debug.Log(String.Format("{0}: {1}", pair.Key, pair.Value));
+
+                    if (string.Equals(pair.Key, "taskName"))
+                        taskTitle = pair.Value.ToString();
                 }
 
+                slot.GetComponent<CalendarEvent>().RenderInfo(taskTitle);
+                PlannerController.Instance.AddEventToList(slot.gameObject);
                 // Newline to separate entries
                 Debug.Log("");
             }
@@ -77,13 +96,7 @@ public class DownloadTask : MonoBehaviour
 
     private void ClearTaskObjects()
     {
-        if (contentParent == null) return;
-        if (contentParent.transform.childCount == 0) return;
-
-        foreach(Transform child in contentParent.transform)
-        {
-            Destroy(child.gameObject);
-        }
+        PlannerController.Instance.RemoveAllFromList();
     }
 
     public void GetCurrentTime()
@@ -93,10 +106,26 @@ public class DownloadTask : MonoBehaviour
         Debug.Log("Time:" + id);
     }
 
+    public GameObject GetTimeSlotObject(string _shortDate,string timeId)
+    {
+        _shortDate = ReconvertDate(_shortDate);
+        string combineTimer = $"{_shortDate} {timeId}";
+        DateTime timer = DateTime.Parse(combineTimer);
+
+        GameObject slot = TimerSlotManager.Instance.GetTimeSlotObject(timer.ToShortTimeString());
+
+        return slot;
+    }
+
     private string DateConverter(string timer)
     {
         //Converts date to include dashes
         return timer.Replace('/', '-');
+    }
+
+    private string ReconvertDate(string timer)
+    {
+        return timer.Replace('-', '/');
     }
 
 }
