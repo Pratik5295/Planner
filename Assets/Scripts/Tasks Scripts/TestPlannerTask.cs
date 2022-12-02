@@ -12,6 +12,9 @@ public class TestPlannerTask : MonoBehaviour
     public TMP_InputField taskDesInput;
     public TMP_Dropdown taskTimerDropdown;
 
+    //Calendar Input
+    public Calendar calendar;
+
     FirebaseFirestore db;
     string mainCollection;
     DateTime timerNow;
@@ -69,6 +72,7 @@ public class TestPlannerTask : MonoBehaviour
         }
 
         timerNow = PlannerController.Instance.currentDate;
+        string calendarDate = calendar.dateValue;
         Debug.Log("Created for date: " + timerNow.ToShortDateString());
         string shortDate = timerNow.ToShortDateString();
         string shortTime = timerNow.ToShortTimeString();
@@ -76,7 +80,7 @@ public class TestPlannerTask : MonoBehaviour
         shortDate = DateConverter(shortDate);
         DocumentReference docRef = db.Collection(mainCollection)
             .Document(FirebaseDataHandler.Instance.GetSessionId())
-            .Collection(shortDate)
+            .Collection(calendarDate)
             .Document(taskTimerDropdown.options[taskTimerDropdown.value].text);
 
         
