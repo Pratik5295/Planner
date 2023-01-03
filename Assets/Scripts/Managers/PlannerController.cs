@@ -37,6 +37,8 @@ public class PlannerController : MonoBehaviour
 
     public Action OnDateChanged;
 
+    public DownloadTask taskDownloader;
+
     private void Awake()
     {
         if (Instance == null)
@@ -59,6 +61,10 @@ public class PlannerController : MonoBehaviour
 
         if (animator != null && animator.gameObject.activeInHierarchy)
             animator.SetInteger(PARAM_STATE, (int)state);
+
+        //Download all tasks again
+        RemoveAllFromList();
+        taskDownloader.GetAllTasks();
     }
 
     public void PlannerHomeScreen()
@@ -106,7 +112,6 @@ public class PlannerController : MonoBehaviour
     public void SetToNextDate()
     {
         currentDate = currentDate.AddDays(1);
-        Debug.Log("Now current Date is: " + currentDate.ToShortDateString());
         RemoveAllFromList();
         UpdateDateHeader();
     }
@@ -114,7 +119,6 @@ public class PlannerController : MonoBehaviour
     public void SetToPreviousDate()
     {
         currentDate = currentDate.AddDays(-1);
-        Debug.Log("Now current Date is: " + currentDate.ToShortDateString());
         RemoveAllFromList();
         UpdateDateHeader();
     }

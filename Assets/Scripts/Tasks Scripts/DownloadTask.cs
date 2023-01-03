@@ -70,23 +70,38 @@ public class DownloadTask : MonoBehaviour
             QuerySnapshot snap = task.Result;
             foreach (DocumentSnapshot documentSnapshot in snap.Documents)
             {
+                //Task information
+                string taskTitle = string.Empty;
+                string taskDescription = string.Empty;
+                string timeId = string.Empty;
+                string taskDate = string.Empty; 
+
                 Debug.Log(String.Format("Document data for {0} document:", documentSnapshot.Id));
-                GameObject slot = GetTimeSlotObject(shortDate, documentSnapshot.Id);
+                
 
                 Dictionary<string, object> t = documentSnapshot.ToDictionary();
 
-                //Task information
-
-                string taskTitle = string.Empty;
+               
                 foreach (KeyValuePair<string, object> pair in t)
                 {
                     Debug.Log(String.Format("{0}: {1}", pair.Key, pair.Value));
 
                     if (string.Equals(pair.Key, "taskName"))
                         taskTitle = pair.Value.ToString();
+                    if (string.Equals(pair.Key, "taskDescription"))
+                        taskDescription = pair.Value.ToString();
+                    if (string.Equals(pair.Key, "taskTimeId"))
+                        timeId = pair.Value.ToString();
+                    if (string.Equals(pair.Key, "taskTime"))
+                        taskDate = pair.Value.ToString();
                 }
 
-                slot.GetComponent<CalendarEvent>().RenderInfo(taskTitle);
+
+                GameObject slot = GetTimeSlotObject(shortDate, timeId);
+
+                slot.GetComponent<CalendarEvent>().FillInfo
+                (documentSnapshot.Id,taskTitle, taskDescription, shortDate,timeId);
+
                 PlannerController.Instance.AddEventToList(slot.gameObject);
                 // Newline to separate entries
                 Debug.Log("");
@@ -103,7 +118,6 @@ public class DownloadTask : MonoBehaviour
     {
         DateTime timerNow = DateTime.Now;
         string id = timerNow.ToShortTimeString();
-        Debug.Log("Time:" + id);
     }
 
     public GameObject GetTimeSlotObject(string _shortDate,string timeId)

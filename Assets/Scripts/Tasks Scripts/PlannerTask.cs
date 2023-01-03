@@ -33,6 +33,9 @@ public class FirebaseTaskData
     public string taskDescription { get; set; }
 
     [FirestoreProperty]
+    public string taskTimeId { get; set; }
+
+    [FirestoreProperty]
     public DateTime taskTime { get; set; }
 }
 

@@ -2,9 +2,12 @@ using UnityEngine;
 using TMPro;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 public class Calendar : MonoBehaviour
 {
+
+    public static Calendar instance = null;
     public string year;
 
     public string dateValue;
@@ -24,6 +27,17 @@ public class Calendar : MonoBehaviour
     private List<string> twentynineOptions = new List<string> { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29"};
     private List<string> twentyeightOptions = new List<string> { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28" };
 
+    private void Awake()
+    {
+        if(instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+    }
 
     private void Start()
     {
@@ -183,6 +197,28 @@ public class Calendar : MonoBehaviour
         //mm-dd-yyyy
 
         dateValue = $"{monthValue}-{dayValue}-{yearValue}";
-        Debug.Log("Date:" + dateValue);
+    }
+
+
+    //Calendar set dropdowns based on event date
+    public void SetDropDown(string eventDate)
+    {
+        eventDate =  DateConverter(eventDate);
+
+        DateTime eventDateTime = DateTime.Parse(eventDate);
+
+        yearText.text = eventDateTime.Year.ToString();
+
+        int monthIndex = monthDropdown.options.FindIndex((i) => { return i.text.Equals(eventDateTime.ToString("MMMM")); });
+        monthDropdown.value = monthIndex;
+
+        int dayIndex = dayDropdown.options.FindIndex((i) => { return i.text.Equals(eventDateTime.Day.ToString()); });
+        dayDropdown.value = dayIndex;
+    }
+
+    private string DateConverter(string timer)
+    {
+        //Converts date to include dashes
+        return timer.Replace('-', '/');
     }
 }

@@ -20,7 +20,6 @@ public class FirebaseAccountSign : MonoBehaviour
 
     public TMP_InputField userNameField;
 
-    public TMP_InputField existNameField;
 
 
     //Testing to be changed in the future
@@ -143,14 +142,14 @@ public class FirebaseAccountSign : MonoBehaviour
 
     public void SignInUser()
     {
-        if (existNameField.text.Trim() == "") return;
-        if (ValidateString(existNameField.text))
+        if (userNameField.text.Trim() == "") return;
+        if (ValidateString(userNameField.text))
         {
-            existNameField.text = string.Empty;
+            userNameField.text = string.Empty;
             return;
         }
 
-        string generalUserName = existNameField.text + extensionString;
+        string generalUserName = userNameField.text + extensionString;
         auth.SignInWithEmailAndPasswordAsync(generalUserName, password).ContinueWithOnMainThread(task =>
         {
             if (task.IsCanceled)
@@ -166,7 +165,7 @@ public class FirebaseAccountSign : MonoBehaviour
             {
                 user = task.Result;
 
-                SetSessionId(existNameField.text);
+                SetSessionId(userNameField.text);
                 return;
             }
         });
